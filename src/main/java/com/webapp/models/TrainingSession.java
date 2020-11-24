@@ -63,4 +63,16 @@ public class TrainingSession {
     public void setWords(Set<Word> words) {
         this.words = words;
     }
+
+    public boolean containsWord(Long wordId) {
+        for(Word word : words) {
+            if(word.getId().equals(wordId))
+                return true;
+        }
+        return false;
+    }
+
+    public void removeWord(Long wordId) {
+        words.removeIf(word -> word.getId().equals(wordId));
+    }
 }

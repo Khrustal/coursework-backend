@@ -1,10 +1,12 @@
 package com.webapp.controllers;
 
+import com.webapp.models.TrainingSession;
 import com.webapp.models.User;
 import com.webapp.models.Word;
 import com.webapp.payload.request.CreateWordRequest;
 import com.webapp.payload.request.WordRequest;
 import com.webapp.payload.response.MessageResponse;
+import com.webapp.repository.TrainingSessionRepository;
 import com.webapp.repository.UserRepository;
 import com.webapp.repository.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,19 @@ public class WordController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/get")
+    @Autowired
+    private TrainingSessionRepository trainingSessionRepository;
+
+    @GetMapping("/get-all")
     public List<Word> getAllWord(@RequestParam(name = "id") Long id) throws UsernameNotFoundException{
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with id: " + id));
         return wordRepository.findByUser(user);
+    }
+
+    @GetMapping("/get")
+    public Word getWord(@RequestParam("id") Long id) {
+        return wordRepository.findById(id).orElseThrow();
     }
 
     @PostMapping("/update")
@@ -60,11 +70,21 @@ public class WordController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteWord(@RequestBody WordRequest wordRequest) {
-        if(!wordRepository.existsByOriginal(wordRequest.getWord())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: word not found"));
+    public ResponseEntity<?> deleteWord(@RequestParam("id") Long id) {
+        Word word = wordRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Word not found"));
+
+        //Get all sessions
+        List<TrainingSession> session = trainingSessionRepository.findAll();
+
+        //Remove word from sessions
+        for (TrainingSession trainingSession : session) {
+            if (trainingSession.containsWord(id)) {
+                trainingSession.removeWord(id);
+                //trainingSessionRepository.save(trainingSession);
+            }
         }
-        Word word = wordRepository.findByOriginal(wordRequest.getWord()).orElseThrow();
+
         wordRepository.delete(word);
 
         return ResponseEntity.ok(new MessageResponse("Word deleted"));

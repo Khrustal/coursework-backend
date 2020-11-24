@@ -37,6 +37,10 @@ public class Word {
         userId = user.getId();
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Long getUserId() {
         return userId;
     }
