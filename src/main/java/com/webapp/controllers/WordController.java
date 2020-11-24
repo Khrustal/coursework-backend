@@ -38,7 +38,7 @@ public class WordController {
         if(!wordRepository.existsByOriginal(updateRequest.getOriginal())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: word not found"));
         }
-        Word word = wordRepository.findByOriginal(updateRequest.getOriginal());
+        Word word = wordRepository.findByOriginal(updateRequest.getOriginal()).orElseThrow();
         word.setTranslation(updateRequest.getTranslation());
         wordRepository.save(word);
         return ResponseEntity.ok(new MessageResponse("Word updated"));
@@ -64,7 +64,7 @@ public class WordController {
         if(!wordRepository.existsByOriginal(wordRequest.getWord())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: word not found"));
         }
-        Word word = wordRepository.findByOriginal(wordRequest.getWord());
+        Word word = wordRepository.findByOriginal(wordRequest.getWord()).orElseThrow();
         wordRepository.delete(word);
 
         return ResponseEntity.ok(new MessageResponse("Word deleted"));
