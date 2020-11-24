@@ -19,16 +19,29 @@ public class TrainingSession {
     private Set<Word> words = new HashSet<>();
 
     @NotBlank
-    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     public TrainingSession(User user, String name) {
         this.user = user;
         this.name = name;
+        userId = user.getId();
     }
 
     public TrainingSession() {
 
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getId() {
@@ -49,13 +62,5 @@ public class TrainingSession {
 
     public void setWords(Set<Word> words) {
         this.words = words;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

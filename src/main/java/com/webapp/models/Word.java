@@ -20,8 +20,13 @@ public class Word {
     @NotBlank
     private String translation;
 
-    @ManyToOne
+    @NotBlank
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     public Word() {}
 
@@ -29,14 +34,15 @@ public class Word {
         this.original = original;
         this.translation = translation;
         this.user = user;
+        userId = user.getId();
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getOriginal() {

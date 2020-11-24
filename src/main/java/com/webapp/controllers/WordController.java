@@ -27,9 +27,9 @@ public class WordController {
     private UserRepository userRepository;
 
     @GetMapping("/get")
-    public List<Word> getAllWord(@RequestBody WordRequest request) throws UsernameNotFoundException{
-        User user = userRepository.findByUsername(request.getWord())
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + request.getWord()));
+    public List<Word> getAllWord(@RequestParam(name = "id") Long id) throws UsernameNotFoundException{
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with id: " + id));
         return wordRepository.findByUser(user);
     }
 

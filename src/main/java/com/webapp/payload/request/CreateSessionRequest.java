@@ -4,17 +4,17 @@ import javax.validation.constraints.NotBlank;
 
 public class CreateSessionRequest {
     @NotBlank
-    private String username;
+    private Long userId;
 
     @NotBlank
     private String name;
 
-    public String getUsername() {
-        return username;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getName() {
