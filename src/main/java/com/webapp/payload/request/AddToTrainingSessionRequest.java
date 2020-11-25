@@ -7,7 +7,7 @@ public class AddToTrainingSessionRequest {
     private Long sessionId;
 
     @NotBlank
-    private String word;
+    private Long wordId;
 
     public Long getSessionId() {
         return sessionId;
@@ -17,11 +17,11 @@ public class AddToTrainingSessionRequest {
         this.sessionId = sessionId;
     }
 
-    public String getWord() {
-        return word;
+    public Long getWordId() {
+        return wordId;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public void setWordId(Long wordId) {
+        this.wordId = wordId;
     }
 }
