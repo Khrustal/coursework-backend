@@ -5,7 +5,6 @@ import com.webapp.models.User;
 import com.webapp.models.Word;
 import com.webapp.payload.request.AddToTrainingSessionRequest;
 import com.webapp.payload.request.CreateSessionRequest;
-import com.webapp.payload.request.WordRequest;
 import com.webapp.payload.response.MessageResponse;
 import com.webapp.repository.TrainingSessionRepository;
 import com.webapp.repository.UserRepository;
@@ -16,7 +15,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -46,17 +48,17 @@ public class TrainingSessionController {
         return session.getWords();
     }
 
-//    @GetMapping("/get-shuffled")
-//    public List<Word> getShuffledSession(@RequestParam("id") Long id) {
-//        TrainingSession session = trainingSessionRepository.findById(id).orElseThrow();
-//        //shuffle words order
-//        Set<Word> wordSet = session.getWords();
-//        int n = wordSet.size();
-//        List<Word> aList = new ArrayList<Word>(n);
-//        aList.addAll(wordSet);
-//        Collections.shuffle(aList);
-//        return aList;
-//    }
+    @GetMapping("/get-test")
+    public List<Word> getShuffledSession(@RequestParam("id") Long id) {
+        TrainingSession session = trainingSessionRepository.findById(id).orElseThrow();
+        //shuffle words order
+        Set<Word> wordSet = session.getWords();
+        int n = wordSet.size();
+        List<Word> aList = new ArrayList<>(n);
+        aList.addAll(wordSet);
+        Collections.shuffle(aList);
+        return aList;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createTrainingSession(@RequestBody CreateSessionRequest request) {

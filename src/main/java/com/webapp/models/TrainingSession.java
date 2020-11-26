@@ -2,10 +2,13 @@ package com.webapp.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
+@Table(name = "training_session")
 public class TrainingSession {
 
     @Id
@@ -15,8 +18,11 @@ public class TrainingSession {
     @NotBlank
     private String name;
 
-    @OneToMany
+    @ManyToMany
     private Set<Word> words = new HashSet<>();
+
+    @OneToMany
+    private List<Result> results = new ArrayList<>();
 
     @NotBlank
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
@@ -54,6 +60,14 @@ public class TrainingSession {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Result> getResults() {
+        return results;
+    }
+
+    public void setResults(List<Result> results) {
+        this.results = results;
     }
 
     public Set<Word> getWords() {
