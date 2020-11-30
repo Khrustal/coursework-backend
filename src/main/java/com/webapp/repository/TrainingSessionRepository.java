@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface TrainingSessionRepository extends JpaRepository<TrainingSession, Long> {
     List<TrainingSession> findByUser(User user);
+
+    boolean existsByName(String name);
 }

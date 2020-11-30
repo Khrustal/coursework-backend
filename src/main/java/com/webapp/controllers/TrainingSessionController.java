@@ -1,14 +1,10 @@
 package com.webapp.controllers;
 
-import com.webapp.models.TrainingSession;
-import com.webapp.models.User;
-import com.webapp.models.Word;
+import com.webapp.models.*;
 import com.webapp.payload.request.AddToTrainingSessionRequest;
 import com.webapp.payload.request.CreateSessionRequest;
 import com.webapp.payload.response.MessageResponse;
-import com.webapp.repository.TrainingSessionRepository;
-import com.webapp.repository.UserRepository;
-import com.webapp.repository.WordRepository;
+import com.webapp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +30,12 @@ public class TrainingSessionController {
 
     @Autowired
     TrainingSessionRepository trainingSessionRepository;
+
+    @Autowired
+    ResultRepository resultRepository;
+
+    @Autowired
+    AnswerRepository answerRepository;
 
     @GetMapping("/get-all")
     public List<TrainingSession> getTrainingSessions(@RequestParam("id") Long id) {
@@ -65,6 +67,8 @@ public class TrainingSessionController {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id " + request.getUserId()));
         TrainingSession trainingSession = new TrainingSession(user, request.getName());
+        if(trainingSessionRepository.existsByName(request.getName()))
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Session with this name already exists"));
         trainingSessionRepository.save(trainingSession);
 
         return ResponseEntity.ok(new MessageResponse("Training session created"));
@@ -101,6 +105,20 @@ public class TrainingSessionController {
     public ResponseEntity<?> deleteTrainingSession(@RequestParam("id") Long id) {
         TrainingSession trainingSession = trainingSessionRepository.findById(id)
                 .orElseThrow();
+        List<Result> results = trainingSession.getResults();
+        for(Result r: results) {
+            if(resultRepository.existsById(r.getId())) {
+                List<Answer> answers = r.getAnswer();
+                for(Answer a: answers){
+                    if(answerRepository.existsById(a.getId()))
+                        answerRepository.delete(a);
+                    else
+                        return ResponseEntity.status(500).build();
+                }
+                resultRepository.delete(r);
+            }
+            else return ResponseEntity.status(500).build();
+        }
         trainingSessionRepository.delete(trainingSession);
 
         return ResponseEntity.ok(new MessageResponse("Session deleted"));

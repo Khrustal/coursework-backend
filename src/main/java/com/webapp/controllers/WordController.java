@@ -1,14 +1,10 @@
 package com.webapp.controllers;
 
-import com.webapp.models.TrainingSession;
-import com.webapp.models.User;
-import com.webapp.models.Word;
+import com.webapp.models.*;
 import com.webapp.payload.request.CreateWordRequest;
 import com.webapp.payload.request.WordRequest;
 import com.webapp.payload.response.MessageResponse;
-import com.webapp.repository.TrainingSessionRepository;
-import com.webapp.repository.UserRepository;
-import com.webapp.repository.WordRepository;
+import com.webapp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +23,12 @@ public class WordController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
+
+    @Autowired
+    private ResultRepository resultRepository;
 
     @Autowired
     private TrainingSessionRepository trainingSessionRepository;
@@ -74,14 +76,29 @@ public class WordController {
         Word word = wordRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Word not found"));
 
-        //Get all sessions
         List<TrainingSession> session = trainingSessionRepository.findAll();
 
         //Remove word from sessions
         for (TrainingSession trainingSession : session) {
             if (trainingSession.containsWord(id)) {
                 trainingSession.removeWord(id);
-                //trainingSessionRepository.save(trainingSession);
+                trainingSessionRepository.save(trainingSession);
+            }
+        }
+
+        List<Result> results = resultRepository.findAll();
+
+        List<Answer> answers = answerRepository.findAll();
+
+        //Remove answers with this word
+        for (Answer  answer: answers) {
+            if (answer.containsWord(id)) {
+                //Remove results with this answers
+                for(Result result: results) {
+                    if(result.containsAnswer(answer.getId()))
+                            resultRepository.delete(result);
+                }
+                answerRepository.delete(answer);
             }
         }
 
