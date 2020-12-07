@@ -74,7 +74,7 @@ public class WordController {
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteWord(@RequestParam("id") Long id) {
         Word word = wordRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Word not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Word not found")); //lol
 
         List<TrainingSession> session = trainingSessionRepository.findAll();
 
