@@ -58,7 +58,7 @@ public class WordController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createWord(@RequestBody CreateWordRequest createRequest) {
-        if(wordRepository.existsByOriginal(createRequest.getOriginal())) {
+        if(wordRepository.existsByOriginalAndUserId(createRequest.getOriginal(), createRequest.getUserId())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: word is already exists!"));

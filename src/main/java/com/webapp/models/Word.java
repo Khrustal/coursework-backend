@@ -5,10 +5,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
 @Entity
-@Table( name = "words",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "original")
-        })
+@Table( name = "words")
 public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

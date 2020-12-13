@@ -15,4 +15,6 @@ public interface WordRepository extends JpaRepository<Word, Long> {
     Boolean existsByOriginal(String original);
 
     Optional<Word> findByOriginal(String original);
+
+    boolean existsByOriginalAndUserId(String original, Long userId);
 }
