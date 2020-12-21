@@ -2,6 +2,7 @@ package com.webapp.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Answer {
@@ -14,6 +15,7 @@ public class Answer {
     private Word word;
 
     @NotBlank
+    @Size(max = 120)
     private String answer;
 
     @NotBlank

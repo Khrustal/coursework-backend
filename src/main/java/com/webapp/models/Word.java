@@ -2,6 +2,7 @@ package com.webapp.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Optional;
 
 @Entity
@@ -12,9 +13,11 @@ public class Word {
     private Long id;
 
     @NotBlank
+    @Size(max = 120)
     private String original;
 
     @NotBlank
+    @Size(max = 120)
     private String translation;
 
     @NotBlank

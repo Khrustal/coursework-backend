@@ -106,7 +106,4 @@ public class Result {
         return false;
     }
 
-    public void removeAnswer(Long id) {
-        answer.removeIf(ans -> ans.getId().equals(id));
-    }
 }

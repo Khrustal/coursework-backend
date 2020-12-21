@@ -11,5 +11,5 @@ import java.util.List;
 public interface TrainingSessionRepository extends JpaRepository<TrainingSession, Long> {
     List<TrainingSession> findByUser(User user);
 
-    boolean existsByName(String name);
+    boolean existsByNameAndUserId(String name, Long userId);
 }

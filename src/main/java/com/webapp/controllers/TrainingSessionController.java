@@ -67,7 +67,7 @@ public class TrainingSessionController {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id " + request.getUserId()));
         TrainingSession trainingSession = new TrainingSession(user, request.getName());
-        if(trainingSessionRepository.existsByName(request.getName()))
+        if(trainingSessionRepository.existsByNameAndUserId(request.getName(), request.getUserId()))
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Session with this name already exists"));
         trainingSessionRepository.save(trainingSession);
 
